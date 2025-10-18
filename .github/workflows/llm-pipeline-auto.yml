@@ -1,0 +1,33 @@
+name: "ADC-Agents-Team Pipeline Automation"
+    
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: "Estágio do pipeline (L1-L9)"
+        required: true
+      project_name:
+        description: "Nome do projeto"
+        required: true
+      auto_triggered:
+        description: "Indica se foi acionado automaticamente"
+        required: false
+        default: "false"
+    
+jobs:
+  trigger_stage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Debug Inputs
+        run: echo "Stage=${{ github.event.inputs.stage }}, Project=${{ github.event.inputs.project_name }}"
+          
+      - name: Set Up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.11"
+          
+      - name: Trigger Next Stage
+        run: |
+          echo "Triggering stage ${{ github.event.inputs.stage }}"
+        env:
+          AUTOMATION_URL: ${{ secrets.AUTOMATION_URL }}
