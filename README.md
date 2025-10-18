@@ -1,12 +1,12 @@
 # 🚀 ADC-Agents-Team - Pipeline LLM PRO Edition (dev-pipe2)
 
-**Versão Final 1.0.0** - Pipeline automatizado de desenvolvimento de aplicações LLM com time especializado de agentes AI.
+**Versão dev-pipe2 1.0.0** - Pipeline automatizado de desenvolvimento de aplicações LLM com time especializado de agentes AI.
 
 ## ✨ Visão Geral
 
-Este projeto implementa um **pipeline completamente automatizado** para desenvolvimento de aplicações LLM usando:
+Este projeto implementa um **pipeline automatizado** para desenvolvimento de aplicações LLM usando:
 
-- **9 Agentes AI Especializados** (L1-L9) com personalidades únicas
+- **9 Agentes AI Especializados** (L1-L9) com personalidades individuais
 - **Terraform** para infraestrutura como código
 - **Google Cloud Functions** para automação
 - **GitHub Actions** para CI/CD
@@ -155,4 +155,4 @@ MIT License - veja [LICENSE](LICENSE) para detalhes.
 
 ---
 
-**🎉 Pipeline 100% Operacional** - Pronto para criar sua próxima aplicação LLM!
+**🎉 Pipeline Operacional** - Pronto para criar sua próxima aplicação LLM!
