@@ -1,0 +1,28 @@
+name: "Stage Deployment"
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - ".github/workflows/stage-deployment.yml"
+
+jobs:
+  deploy_stage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Terraform Init & Plan
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: "1.6"
+      - run: terraform init
+      
+      - name: Terraform Plan
+        run: terraform plan -var="project_name=${{ secrets.PROJECT_NAME }}" -out=tfplan
+      
+      - name: Terraform Apply
+        if: github.event.inputs.auto_triggered == 'true'
+        run: terraform apply -auto-approve tfplan
