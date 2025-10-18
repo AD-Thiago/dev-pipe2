@@ -1,0 +1,149 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "${project_name}",
+    "description": "${project_description}",
+    "created_at": "${creation_timestamp}",
+    "owner": {
+      "name": "${your_name}",
+      "email": "${your_email}"
+    },
+    "environment": "${environment}",
+    "timezone": "${timezone}"
+  },
+  "automation": {
+    "enabled": true,
+    "auto_approve_stages": [${join([for stage in auto_approve_stages : format("\"%s\"", stage)], ", ")}],
+    "webhook_url": "${webhook_url}",
+    "apps_script_url": "${apps_script_url}",
+    "automation_url": "${automation_url}",
+    "retry_attempts": 3,
+    "timeout_seconds": 300,
+    "notification_channels": {
+      "email": "${notification_email}",
+      "slack": "${slack_webhook_url}"
+    }
+  },
+  "integrations": {
+    "google_drive": {
+      "folder_id": "${drive_folder_id}",
+      "folder_url": "https://drive.google.com/drive/folders/${drive_folder_id}",
+      "auto_organize": true,
+      "backup_enabled": true,
+      "backup_frequency": "daily"
+    },
+    "github": {
+      "owner": "${github_owner}",
+      "repository": "${github_repo}",
+      "branch": "main",
+      "auto_deploy": true,
+      "workflow_file": "llm-pipeline-auto.yml"
+    },
+    "linear": {
+      "organization_id": "${linear_organization_id}",
+      "team_key": "${linear_team_key}",
+      "sync_enabled": true,
+      "webhook_secret": "[CONFIGURED_VIA_TERRAFORM]"
+    }
+  },
+  "agents": {
+    %{ for id, agent in agents }
+    "${id}": {
+      "name": "${agent.name}",
+      "email": "${agent.email}",
+      "role": "${agent.role}",
+      "department": "${agent.department}",
+      "avatar": "${agent.avatar}",
+      "auto_proceed": ${contains(auto_approve_stages, id)},
+      "skills": [${join([for skill in agent.skills : format("\"%s\"", skill)], ", ")}],
+      "tools": [${join([for tool in agent.tools : format("\"%s\"", tool)], ", ")}],
+      "methodology": [${join([for method in agent.methodology : format("\"%s\"", method)], ", ")}]
+    }${id != keys(agents)[length(keys(agents))-1] ? "," : ""}
+    %{ endfor }
+  },
+  "pipeline": {
+    "total_stages": ${length(stages)},
+    "estimated_duration_days": ${project_duration_days},
+    "target_completion": "${target_completion}",
+    "milestones": {
+      %{ for milestone_name, milestone in milestones }
+      "${milestone_name}": {
+        "target_date": "${milestone.target_date}",
+        "description": "${milestone.description}",
+        "stages": [${join([for stage in milestone.stages : format("\"%s\"", stage)], ", ")}]
+      }${milestone_name != keys(milestones)[length(keys(milestones))-1] ? "," : ""}
+      %{ endfor }
+    },
+    "stages": {
+      %{ for stage in stages }
+      "${stage.id}": {
+        "title": "${stage.title}",
+        "description": "${stage.description}",
+        "agent": "${stage.agent}",
+        "priority": ${stage.priority},
+        "estimate": ${stage.estimate},
+        "auto_proceed": ${stage.auto_proceed},
+        "milestone": "${stage.milestone}",
+        "deliverables": [${join([for deliverable in stage.deliverables : format("\"%s\"", deliverable)], ", ")}],
+        "acceptance_criteria": [${join([for criteria in stage.acceptance_criteria : format("\"%s\"", criteria)], ", ")}],
+        "dependencies": [${join([for dep in stage.dependencies : format("\"%s\"", dep)], ", ")}],
+        "resources": [${join([for resource in stage.resources : format("\"%s\"", resource)], ", ")}]
+      }${stage.id != stages[length(stages)-1].id ? "," : ""}
+      %{ endfor }
+    }
+  },
+  "folders": {
+    %{ for folder_name, config in drive_folder_structure }
+    "${folder_name}": {
+      "parent": "${config.parent}",
+      "subfolders": [${join([for subfolder in config.subfolders : format("\"%s\"", subfolder)], ", ")}]
+    }${folder_name != keys(drive_folder_structure)[length(keys(drive_folder_structure))-1] ? "," : ""}
+    %{ endfor }
+  },
+  "monitoring": {
+    "enabled": ${enable_monitoring},
+    "notifications_enabled": ${enable_notifications},
+    "budget_alert_threshold": ${budget_alert_threshold},
+    "log_level": "${current_env_config.log_level}",
+    "retention_days": ${current_env_config.retention_days},
+    "health_check_interval": "5m",
+    "metrics": [
+      "pipeline_execution_time",
+      "stage_completion_rate",
+      "error_rate",
+      "automation_success_rate",
+      "webhook_response_time"
+    ]
+  },
+  "security": {
+    "encryption_enabled": true,
+    "access_control": "rbac",
+    "audit_logging": true,
+    "secret_management": "google_secret_manager",
+    "cors_origins": [
+      "https://linear.app",
+      "https://github.com",
+      "https://drive.google.com",
+      "https://perplexity.ai"
+    ]
+  },
+  "maintenance": {
+    "backup_schedule": "0 2 * * *",
+    "cleanup_schedule": "0 3 * * 0",
+    "update_check_schedule": "0 4 * * 1",
+    "log_rotation": "weekly",
+    "terraform_state_backup": true
+  },
+  "metadata": {
+    "terraform_managed": true,
+    "terraform_version": "1.6+",
+    "providers": {
+      "google": "~> 5.40",
+      "github": "~> 6.2",
+      "linear": "~> 0.1.1",
+      "gdrive": "~> 1.2"
+    },
+    "last_updated": "${creation_timestamp}",
+    "config_version": "1.0.0"
+  }
+}
