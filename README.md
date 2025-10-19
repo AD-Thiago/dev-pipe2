@@ -4,7 +4,7 @@ Pipeline automatizado de desenvolvimento de aplicações LLM com agentes especia
 
 ## Recursos
 
-- 🔗 **Google Drive:** https://drive.google.com/drive/folders/GDRIVE_DISABLED
+- 🔗 **Google Drive:** https://drive.google.com/drive/folders/1vgPVWt3o_SKZFgpStjrCKwuPOCg6wxNu
 - 🔧 **GitHub Repo:** https://github.com/AD-Thiago/dev-pipe2
 
 ## Time & Agentes
